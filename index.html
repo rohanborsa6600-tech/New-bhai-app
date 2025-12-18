@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShreeLipi Devanagari to Unicode Converter</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vesper+Libre&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Vesper Libre", serif;
+      }
+
+      textarea {
+        font-family: inherit;
+        height: 200px;
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ShreeLipi Devanagari to Unicode Converter</h1>
+    <p>
+      This is font converter to convert from ShreeLipi Devanagari to Unicode.
+      This works well for these fonts: SHREE-DEV7-0714E (Tested) and ShreeLipi
+      Dev Ratna Universal.
+      <br />
+      Adapted from:
+      <a href="https://github.com/sanskrit-coders/tech_hindi_font_converters"
+        >https://github.com/sanskrit-coders/tech_hindi_font_converters</a
+      >
+    </p>
+    <label for="legacy_text">
+      <b>Input in Shreelipi</b>
+      <br />
+      <textarea id="legacy_text" placeholder="Type or paste here"></textarea>
+    </label>
+    <br />
+    <br />
+
+    <label for="unicode_text">
+      <b>Output in Unicode</b>
+      <br />
+      <textarea
+        id="unicode_text"
+        placeholder="Output will be here"
+        readonly
+      ></textarea>
+    </label>
+
+    <br />
+
+    <button id="copy_btn">Copy Output</button>
+
+    <br />
+    <br />
+    <footer>
+      <div>
+        <a href="https://github.com/vipranarayan14/font-converter"
+          >Repository</a
+        >
+        <span> | </span>
+        <a href="https://github.com/vipranarayan14/font-converter/issues"
+          >Report an issue</a
+        >
+        <!-- <span> | </span> -->
+        <!-- <a href="https://vipranarayan14.github.io">Other projects</a> -->
+      </div>
+      <div>Copyright © 2023 Prasanna Venkatesh T S</div>
+    </footer>
+
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
