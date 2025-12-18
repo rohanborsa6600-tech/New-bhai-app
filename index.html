@@ -1,230 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquid Glass Converter</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Vesper+Libre&display=swap" rel="stylesheet">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShreeLipi Devanagari to Unicode Converter</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Vesper+Libre&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            --text-color: #ffffff;
-            --accent-color: #ff6b6b;
-        }
+      :root {
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        --text-color: #ffffff;
+      }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; /* For liquid blobs */
-            color: white;
-        }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--text-color);
+        overflow-x: hidden;
+      }
 
-        /* Moving Liquid Blobs Background */
-        .blob {
-            position: absolute;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.8;
-            animation: move 10s infinite alternate;
-        }
-        .blob-1 {
-            top: 10%;
-            left: 20%;
-            width: 300px;
-            height: 300px;
-            background: #ff00cc;
-            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-        }
-        .blob-2 {
-            bottom: 10%;
-            right: 20%;
-            width: 350px;
-            height: 350px;
-            background: #3333ff;
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-            animation-duration: 15s;
-        }
+      /* Animated Blobs Background */
+      .blob {
+        position: absolute;
+        filter: blur(70px);
+        z-index: -1;
+        opacity: 0.6;
+        animation: float 10s infinite alternate;
+      }
+      .blob-1 { top: 5%; left: 15%; width: 350px; height: 350px; background: #ff00cc; border-radius: 40% 60% 70% 30%; }
+      .blob-2 { bottom: 5%; right: 15%; width: 400px; height: 400px; background: #3333ff; border-radius: 60% 40% 30% 70%; animation-duration: 15s; }
+      
+      @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        100% { transform: translate(30px, 50px) rotate(15deg); }
+      }
 
-        @keyframes move {
-            from { transform: translate(0, 0) rotate(0deg); }
-            to { transform: translate(20px, 40px) rotate(20deg); }
-        }
+      /* Glass Container */
+      .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        box-shadow: var(--glass-shadow);
+        padding: 30px;
+        width: 90%;
+        max-width: 1200px;
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
 
-        /* Glass Container */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: var(--glass-shadow);
-            padding: 40px;
-            width: 90%;
-            max-width: 1000px;
-            height: 85vh;
-            display: flex;
-            flex-direction: column;
-        }
+      h1 {
+        font-weight: 600;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+      p {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
 
-        h1 {
-            font-weight: 600;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-        }
+      p a {
+        color: #ff00cc;
+        text-decoration: none;
+        font-weight: 500;
+      }
 
-        /* Mode Switcher */
-        .switch-container {
-            display: flex;
-            align-items: center;
-            background: rgba(0,0,0,0.2);
-            border-radius: 30px;
-            padding: 5px;
-        }
+      /* Grid for Text Areas */
+      .converter-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        flex-grow: 1;
+        overflow: hidden; /* Contains scroll inside textareas */
+      }
 
-        .switch-btn {
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.6);
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+      }
 
-        .switch-btn.active {
-            background: white;
-            color: #1a1a2e;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+      .input-group label {
+        margin-bottom: 8px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        color: #ddd;
+      }
 
-        /* Grid Layout */
+      textarea {
+        flex-grow: 1;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        color: #fff;
+        padding: 20px;
+        font-family: 'Vesper Libre', serif;
+        font-size: 1.3rem;
+        line-height: 1.6;
+        resize: none;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      textarea:focus {
+        background: rgba(0, 0, 0, 0.35);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      textarea::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+        font-family: 'Poppins', sans-serif;
+      }
+
+      /* Button Styling */
+      #copy_btn {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        backdrop-filter: blur(5px);
+        transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      }
+
+      #copy_btn:hover {
+        background: white;
+        color: #1a1a2e;
+        transform: translateY(-2px);
+      }
+
+      /* Footer styling */
+      footer {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        font-size: 0.75rem;
+        text-align: center;
+        opacity: 0.6;
+      }
+
+      footer a {
+        color: white;
+        text-decoration: underline;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
         .converter-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            flex-grow: 1;
-            height: 100%;
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr 1fr;
         }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            position: relative;
+        .glass-card {
+          height: auto;
+          min-height: 95vh;
         }
-
-        label {
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-            font-weight: 300;
-        }
-
         textarea {
-            flex-grow: 1;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            color: white;
-            padding: 20px;
-            font-size: 1.2rem;
-            font-family: 'Vesper Libre', serif; /* Good for Marathi */
-            resize: none;
-            outline: none;
-            transition: 0.3s;
+          min-height: 250px;
         }
-
-        textarea:focus {
-            background: rgba(0, 0, 0, 0.3);
-            border-color: rgba(255,255,255,0.4);
-        }
-
-        textarea::placeholder {
-            color: rgba(255,255,255,0.3);
-        }
-
-        /* Copy Button */
-        .copy-btn {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .copy-btn:hover {
-            background: white;
-            color: #333;
-        }
-
-        /* Responsive for iPad Portrait / Mobile */
-        @media (max-width: 768px) {
-            .converter-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr 1fr;
-            }
-            .glass-card {
-                padding: 20px;
-                height: 95vh;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
 
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
 
     <div class="glass-card">
-        <header>
-            <h1>Font Converter</h1>
-            <div class="switch-container">
-                <button class="switch-btn active" id="toUnicodeBtn">To Unicode</button>
-                <button class="switch-btn" id="toLegacyBtn">To ShreeLipi</button>
-            </div>
-        </header>
+      <h1>ShreeLipi Devanagari to Unicode Converter</h1>
+      
+      <p>
+        This is font converter to convert from ShreeLipi Devanagari to Unicode.
+        This works well for SHREE-DEV7-0714E and ShreeLipi Dev Ratna Universal.
+        <br />
+        Adapted from:
+        <a href="https://github.com/sanskrit-coders/tech_hindi_font_converters" target="_blank">sanskrit-coders/tech_hindi_font_converters</a>
+      </p>
 
-        <div class="converter-grid">
-            <div class="input-group">
-                <label id="inputLabel">ShreeLipi Input</label>
-                <textarea id="inputText" placeholder="Type or paste here..."></textarea>
-            </div>
-
-            <div class="input-group">
-                <label id="outputLabel">Unicode Output</label>
-                <textarea id="outputText" readonly placeholder="Result will appear here..."></textarea>
-                <button id="copyBtn" class="copy-btn">Copy</button>
-            </div>
+      <div class="converter-grid">
+        <div class="input-group">
+          <label for="legacy_text">Input in Shreelipi</label>
+          <textarea id="legacy_text" placeholder="Type or paste here"></textarea>
         </div>
+
+        <div class="input-group">
+          <label for="unicode_text">Output in Unicode</label>
+          <textarea id="unicode_text" placeholder="Output will be here" readonly></textarea>
+          
+          <button id="copy_btn">Copy Output</button>
+        </div>
+      </div>
+
+      <footer>
+        <div>
+          <a href="https://github.com/vipranarayan14/font-converter">Repository</a>
+          <span> | </span>
+          <a href="https://github.com/vipranarayan14/font-converter/issues">Report an issue</a>
+        </div>
+        <div style="margin-top: 5px;">Copyright © 2023 Prasanna Venkatesh T S</div>
+      </footer>
     </div>
 
     <script type="module" src="./index.js"></script>
-</body>
+  </body>
 </html>
