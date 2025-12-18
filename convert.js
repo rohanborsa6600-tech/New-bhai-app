@@ -1,192 +1,185 @@
-import { shreelipi_list, unicode_list } from "./mapping.js";
+// converter.js
 
-// Adapted from: https://github.com/sanskrit-coders/tech_hindi_font_converters
+// DATA MAPPINGS (Sourced from uploaded ShreeLipi.js logic)
+const array_shreelipi = [
+  'u', 'ª', '}', 'n', 'p', 'H', '·', 'I', '»', 'J', '½', 'K',
+  'M', 'À', 'N', 'µO', 'O', 'µÁ', 'Á', 'P', 'Q', 'R', '¶S', 'S',
+  '¶T', 'T', 'U', 'Ê', 'W', 'Ï', 'V', 'Ë', 'Y', 'Ü', 'X', 'Z',
+  'Ý', '\\', 'â', '[', 'ß', '^', 'ä', ']', 'ã', '_', 'å', '`',
+  'a', 'c', 'ë', 'd', 'ì', 'e', 'û', 'í', 'f', 'î', 'g', 'ñ',
+  'h', 'j', 'ú', 'k', 'Ô', 'Û', 'Ú', 'à', 'Þ', 'Q­', 'º$', 'Ì',
+  'Ð', 'Õ', 'l', 'Îm', '¸', '„', 'ˆ', 'œ', 'Å', 'Am¡', 'Am{',
+  'Am|', 'Am', 'A', 'B©', 'B', 'C', 'D', 'E{', 'E', 'F', 'm°',
+  'm{', 'm|', '{', '|', 'm¡', 'm¢', '¡', '¢', 'm', 'r', 's',
+  't', 'w', 'þ', 'y', '§', '±', '•', '¥', '²', 'Ñ', '«', 'é',
+  'ê', '&', '$', '>', 'µ'
+];
 
-export function convert_to_unicode(modified_substring) {
-  var shreelipi_length = shreelipi_list.length;
+const array_unicode = [
+  '©', '©ं', '{©', 'o', 'o', "क", 'क्‌', "ख", 'ख्‌', "ग", 'ग्', "घ",
+  'च', 'च्‌', 'छ', 'ज़', 'ज', 'ज़्‌', 'ज्‌', 'झ', "ट", "ठ", 'ड़', "ड",
+  'ढ़', 'ढ', "ण", 'ण्', "थ", 'थ्', "त", 'त्', "ध", 'ध्', "द", "न",
+  'न्', "फ", 'फ्‌', "प", 'प्‌', "भ", 'भ्', "ब", 'ब्‌', "म", 'म्',
+  "य", "र", "ल", 'ल्‌', "व", 'व्‌', "श", 'श्', 'श्', 'ष', 'ष्‌',
+  "स", 'स्', "ह", 'क्ष', 'क्ष्', 'ज्ञ', 'द्द', 'द्व', 'द्य', 'प्र',
+  'न्न', 'ट्र', 'क्त', 'त्र', 'द्र', 'द्ध', 'श्र', 'त्त', 'क्क',
+  'ल्ल', 'ह्व', 'श्व', 'ट्ट', 'औ', 'ओ', 'ओं', 'आ', 'अ', 'ई', 'इ',
+  'उ', 'ऊ', 'ऐ', 'ए', 'ऋ', 'ॉ', "ो", "ों", "े", "ें", "ौ", "ौं",
+  "ै", 'ैं', "ा", "ी", "ी", "ीं", "ु", 'ु', "ू", 'ं', 'ँ', 'ः',
+  'ृ', '्‌', 'दृ', '्र', 'रु', 'रू', '।', '', '', ''
+];
 
-  //****************************************************************************************
-  //  Break the long text into small bunches of max. max_text_size  characters each.
-  //****************************************************************************************
-  var text_size = document.getElementById("legacy_text").value.length;
+/**
+ * Converts ShreeLipi text to Unicode
+ */
+export function convertToUnicode(text) {
+  if (!text) return "";
+  let modified_substring = text;
+  const array_length = array_shreelipi.length;
 
-  var processed_text = ""; //blank
-
-  var sthiti1 = 0;
-  var sthiti2 = 0;
-  var chale_chalo = 1;
-
-  var max_text_size = 6000;
-
-  while (chale_chalo == 1) {
-    sthiti1 = sthiti2;
-
-    if (sthiti2 < text_size - max_text_size) {
-      sthiti2 += max_text_size;
-      while (
-        document.getElementById("legacy_text").value.charAt(sthiti2) != " "
-      ) {
-        sthiti2--;
-      }
-    } else {
-      sthiti2 = text_size;
-      chale_chalo = 0;
+  // 1. Basic Substitution
+  for (let i = 0; i < array_length; i++) {
+    if (array_shreelipi[i] && array_unicode[i]) {
+       modified_substring = modified_substring.split(array_shreelipi[i]).join(array_unicode[i]);
     }
-
-    modified_substring = document
-      .getElementById("legacy_text")
-      .value.substring(sthiti1, sthiti2);
-
-    Replace_Symbols();
-
-    var processed_text = processed_text + modified_substring;
-
-    //  Breaking part code over
-
-    return processed_text;
   }
 
-  //--------------------------------------------------
+  // 2. Special Glyph Corrections (Logic from convert.js/ShreeLipi.js)
 
-  function Replace_Symbols() {
-    //substitute unicode elements in place of corresponding shreelipi elements
+  // Fix: Chhoti 'i' matra (swapping position)
+  let position_of_i = modified_substring.indexOf("o");
+  while (position_of_i !== -1) {
+    let char_next = modified_substring.charAt(position_of_i + 1);
+    let to_replace = "o" + char_next;
+    modified_substring = modified_substring.replace(to_replace, char_next + "ि");
+    position_of_i = modified_substring.indexOf("o", position_of_i + 1);
+  }
 
-    if (modified_substring != "") {
-      // if string to be converted is non-blank then no need of any processing.
-      for (
-        let input_symbol_idx = 0;
-        input_symbol_idx < shreelipi_length;
-        input_symbol_idx++
-      ) {
-        let indx = 0; // index of the symbol being searched for replacement
+  // Fix: Chhoti 'i' on half-letters
+  let position_wrong_ee = modified_substring.indexOf("ि्");
+  while (position_wrong_ee !== -1) {
+    let cons_next = modified_substring.charAt(position_wrong_ee + 2);
+    let replace_str = "ि्" + cons_next;
+    modified_substring = modified_substring.replace(replace_str, "्" + cons_next + "ि");
+    position_wrong_ee = modified_substring.indexOf("ि्", position_wrong_ee + 2);
+  }
 
-        while (indx != -1) {
-          //whie-00
-          modified_substring = modified_substring.replace(
-            shreelipi_list[input_symbol_idx],
-            unicode_list[input_symbol_idx]
-          );
-          indx = modified_substring.indexOf(shreelipi_list[input_symbol_idx]);
-        } // end of while-00 loop
-      } // end of for loop
+  // Fix: 'q' replacement
+  position_of_i = modified_substring.indexOf("q");
+  while (position_of_i !== -1) {
+    let char_next = modified_substring.charAt(position_of_i + 1);
+    let to_replace = "q" + char_next;
+    modified_substring = modified_substring.replace(to_replace, char_next + "o");
+    position_of_i = modified_substring.indexOf("q", position_of_i + 1);
+  }
 
-      //**********************************************************************************
-      // Code for Replacing  Special glyphs
-      //**********************************************************************************
+  // Fix: 'o' + Halant correction
+  position_wrong_ee = modified_substring.indexOf("o्");
+  while (position_wrong_ee !== -1) {
+    let cons_next = modified_substring.charAt(position_wrong_ee + 2);
+    let replace_str = "o्" + cons_next;
+    modified_substring = modified_substring.replace(replace_str, "्" + cons_next + "िं");
+    position_wrong_ee = modified_substring.indexOf("o्", position_wrong_ee + 3);
+  }
 
-      //  chhotii 'i' kii maatraa  and its position  correction
+  // Cleanup leftover 'o'
+  modified_substring = modified_substring.replace(/o/g, "िं");
 
-      var position_of_i = modified_substring.indexOf("{");
+  // 3. Reph Correction (The flying 'r')
+  const set_of_matras = "ािीुूृेैोौंःँॅ";
+  let position_of_reph = modified_substring.indexOf("©");
 
-      while (position_of_i != -1) {
-        //while-02
-        var charecter_next_to_i = modified_substring.charAt(position_of_i + 1);
-        var charecter_to_be_replaced = "{" + charecter_next_to_i;
-        modified_substring = modified_substring.replace(
-          charecter_to_be_replaced,
-          charecter_next_to_i + "ि"
-        );
-        position_of_i = modified_substring.search(/{/, position_of_i + 1); // search for  '{' ahead of the current position.
-      } // end of while-02 loop
+  while (position_of_reph > 0) {
+    let prob_pos = position_of_reph - 1;
+    let char_at_pos = modified_substring.charAt(prob_pos);
 
-      // following loop to eliminate 'chhotee ee kee maatraa' on half-letters as a result of above transformation.
+    while (set_of_matras.includes(char_at_pos)) {
+      prob_pos--;
+      char_at_pos = modified_substring.charAt(prob_pos);
+    }
 
-      var position_of_wrong_ee = modified_substring.indexOf("ि्");
+    let chunk = modified_substring.substring(prob_pos, position_of_reph);
+    let new_chunk = "र्" + chunk;
+    
+    let before = modified_substring.substring(0, prob_pos);
+    let after = modified_substring.substring(position_of_reph + 1);
+    modified_substring = before + new_chunk + after;
+    
+    position_of_reph = modified_substring.indexOf("©", prob_pos + new_chunk.length);
+  }
 
-      while (position_of_wrong_ee != -1) {
-        //while-03
+  return modified_substring;
+}
 
-        var consonent_next_to_wrong_ee = modified_substring.charAt(
-          position_of_wrong_ee + 2
-        );
-        var charecter_to_be_replaced = "ि्" + consonent_next_to_wrong_ee;
-        modified_substring = modified_substring.replace(
-          charecter_to_be_replaced,
-          "्" + consonent_next_to_wrong_ee + "ि"
-        );
-        position_of_wrong_ee = modified_substring.search(
-          /ि्/,
-          position_of_wrong_ee + 2
-        ); // search for 'wrong ee' ahead of the current position.
-      } // end of while-03 loop
+/**
+ * Converts Unicode text back to ShreeLipi
+ */
+export function convertToShreeLipi(text) {
+  if (!text) return "";
+  let modified_substring = "  " + text; // Padding for safety
+  
+  // 1. Logic for 'िं' -> 'q'
+  let pos_f = modified_substring.indexOf('िं');
+  while (pos_f !== -1) {
+      modified_substring = modified_substring.replace('िं', 'q');
+      let char_left = modified_substring.charAt(pos_f - 1);
+      modified_substring = modified_substring.replace(char_left + "q", "q" + char_left);
+      
+      pos_f = pos_f - 1;
+      while (modified_substring.charAt(pos_f - 1) === "्" && pos_f !== 0) {
+         let str_replace = modified_substring.charAt(pos_f - 2) + "्";
+         modified_substring = modified_substring.replace(str_replace + "q", "q" + str_replace);
+         pos_f -= 2;
+      }
+      pos_f = modified_substring.indexOf('िं', pos_f + 1);
+  }
 
-      //**********************************************************************************
-      // Code for Replacing  'q'  which is   chhotii 'i' kii maatraa  with anuswaar
-      //**********************************************************************************
+  // 2. Logic for 'ि' -> 'o'
+  pos_f = modified_substring.indexOf("ि");
+  while (pos_f !== -1) {
+      let char_left = modified_substring.charAt(pos_f - 1);
+      modified_substring = modified_substring.replace(char_left + "ि", "o" + char_left);
+      
+      pos_f = pos_f - 1;
+      while (modified_substring.charAt(pos_f - 1) === "्" && pos_f !== 0) {
+          let str_replace = modified_substring.charAt(pos_f - 2) + "्";
+          modified_substring = modified_substring.replace(str_replace + "o", "o" + str_replace);
+          pos_f -= 2;
+      }
+      pos_f = modified_substring.indexOf("ि", pos_f + 1);
+  }
 
-      var position_of_i = modified_substring.indexOf("q");
+  // 3. Reph 'र्' -> '©'
+  const set_of_matras = "ािीुूृेैोौं:ँॅ";
+  
+  let pos_half_R = modified_substring.indexOf("र्");
+  while (pos_half_R > 0) {
+      let prob_pos_Z;
+      if (modified_substring.charAt(pos_half_R + 3) !== '्') {
+          prob_pos_Z = pos_half_R + 2;
+      } else {
+          prob_pos_Z = pos_half_R + 4;
+      }
 
-      while (position_of_i != -1) {
-        //while-02
-        var charecter_next_to_i = modified_substring.charAt(position_of_i + 1);
-        var charecter_to_be_replaced = "q" + charecter_next_to_i;
-        modified_substring = modified_substring.replace(
-          charecter_to_be_replaced,
-          charecter_next_to_i + "o"
-        );
-        position_of_i = modified_substring.search(/q/, position_of_i + 1); // search for  'q' ahead of the current position.
-      } // end of while-02 loop
+      let char_right = modified_substring.charAt(prob_pos_Z + 1);
+      while(set_of_matras.includes(char_right)) {
+          prob_pos_Z++;
+          char_right = modified_substring.charAt(prob_pos_Z + 1);
+      }
 
-      // following loop to eliminate 'chhotee ee kee maatraa' on half-letters as a result of above transformation.
+      let str_replace = modified_substring.substring(pos_half_R + 2, prob_pos_Z + 1);
+      modified_substring = modified_substring.replace("र्" + str_replace, str_replace + "©");
+      pos_half_R = modified_substring.indexOf("र्");
+  }
 
-      var position_of_wrong_ee = modified_substring.indexOf("o्");
+  modified_substring = modified_substring.trim();
 
-      while (position_of_wrong_ee != -1) {
-        //while-03
+  // 4. Basic Reverse Substitution
+  for (let i = array_unicode.length - 1; i >= 0; i--) {
+      if (array_unicode[i] && array_shreelipi[i]) {
+         modified_substring = modified_substring.split(array_unicode[i]).join(array_shreelipi[i]);
+      }
+  }
 
-        var consonent_next_to_wrong_ee = modified_substring.charAt(
-          position_of_wrong_ee + 2
-        );
-        var charecter_to_be_replaced = "o्" + consonent_next_to_wrong_ee;
-        modified_substring = modified_substring.replace(
-          charecter_to_be_replaced,
-          "्" + consonent_next_to_wrong_ee + "िं"
-        );
-        position_of_wrong_ee = modified_substring.search(
-          /o्/,
-          position_of_wrong_ee + 3
-        ); // search for 'wrong ee' ahead of the current position.
-      } // end of while-03 loop
-
-      //  those 'o'  which do not come with halanta  should also be replaced now
-      modified_substring = modified_substring.replace(/o/g, "िं");
-
-      //**********************************************************************************
-      //Eliminating reph "©" and putting 'half - r' at proper position for this.
-      //**********************************************************************************
-      let set_of_matras = "ािीुूृेैोौंःँॅ";
-      var position_of_reph = modified_substring.indexOf("©");
-
-      while (position_of_reph > 0) {
-        // while-04
-        let probable_position_of_half_r = position_of_reph - 1;
-        var charecter_at_probable_position_of_half_r =
-          modified_substring.charAt(probable_position_of_half_r);
-
-        // trying to find non-maatra position left to current O (ie, half -r).
-
-        while (
-          set_of_matras.match(charecter_at_probable_position_of_half_r) != null
-        ) {
-          // while-05
-          probable_position_of_half_r = probable_position_of_half_r - 1;
-          charecter_at_probable_position_of_half_r = modified_substring.charAt(
-            probable_position_of_half_r
-          );
-        } // end of while-05
-
-        charecter_to_be_replaced = modified_substring.substr(
-          probable_position_of_half_r,
-          position_of_reph - probable_position_of_half_r
-        );
-        let new_replacement_string = "र्" + charecter_to_be_replaced;
-        charecter_to_be_replaced = charecter_to_be_replaced + "©";
-        modified_substring = modified_substring.replace(
-          charecter_to_be_replaced,
-          new_replacement_string
-        );
-        position_of_reph = modified_substring.indexOf("©");
-      } // end of while-04
-    } //end of IF  statement  meant to  supress processing of  blank  string.
-  } // end of the function  Replace_Symbols
+  return modified_substring;
 }
