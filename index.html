@@ -1,71 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ShreeLipi Devanagari to Unicode Converter</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Vesper+Libre&display=swap"
-      rel="stylesheet"
-    />
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid Glass Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Vesper+Libre&display=swap" rel="stylesheet">
+    
     <style>
-      body {
-        font-family: "Vesper Libre", serif;
-      }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --text-color: #ffffff;
+            --accent-color: #ff6b6b;
+        }
 
-      textarea {
-        font-family: inherit;
-        height: 200px;
-        width: 400px;
-      }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* For liquid blobs */
+            color: white;
+        }
+
+        /* Moving Liquid Blobs Background */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.8;
+            animation: move 10s infinite alternate;
+        }
+        .blob-1 {
+            top: 10%;
+            left: 20%;
+            width: 300px;
+            height: 300px;
+            background: #ff00cc;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        }
+        .blob-2 {
+            bottom: 10%;
+            right: 20%;
+            width: 350px;
+            height: 350px;
+            background: #3333ff;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation-duration: 15s;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(20px, 40px) rotate(20deg); }
+        }
+
+        /* Glass Container */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+            padding: 40px;
+            width: 90%;
+            max-width: 1000px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* Mode Switcher */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 30px;
+            padding: 5px;
+        }
+
+        .switch-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .switch-btn.active {
+            background: white;
+            color: #1a1a2e;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Grid Layout */
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            height: 100%;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        textarea {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            color: white;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-family: 'Vesper Libre', serif; /* Good for Marathi */
+            resize: none;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        textarea:focus {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        textarea::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn:hover {
+            background: white;
+            color: #333;
+        }
+
+        /* Responsive for iPad Portrait / Mobile */
+        @media (max-width: 768px) {
+            .converter-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+            .glass-card {
+                padding: 20px;
+                height: 95vh;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <h1>ShreeLipi Devanagari to Unicode Converter</h1>
-  
-    <label for="legacy_text">
-      <b>Input in Shreelipi</b>
-      <br />
-      <textarea id="legacy_text" placeholder="Type or paste here"></textarea>
-    </label>
-    <br />
-    <br />
+</head>
+<body>
 
-    <label for="unicode_text">
-      <b>Output in Unicode</b>
-      <br />
-      <textarea
-        id="unicode_text"
-        placeholder="Output will be here"
-        readonly
-      ></textarea>
-    </label>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-    <br />
+    <div class="glass-card">
+        <header>
+            <h1>Font Converter</h1>
+            <div class="switch-container">
+                <button class="switch-btn active" id="toUnicodeBtn">To Unicode</button>
+                <button class="switch-btn" id="toLegacyBtn">To ShreeLipi</button>
+            </div>
+        </header>
 
-    <button id="copy_btn">Copy Output</button>
+        <div class="converter-grid">
+            <div class="input-group">
+                <label id="inputLabel">ShreeLipi Input</label>
+                <textarea id="inputText" placeholder="Type or paste here..."></textarea>
+            </div>
 
-    <br />
-    <br />
-    <footer>
-      <div>
-        <a href="https://github.com/vipranarayan14/font-converter"
-          >Repository</a
-        >
-        <span> | </span>
-        <a href="https://github.com/vipranarayan14/font-converter/issues"
-          >Report an issue</a
-        >
-        <!-- <span> | </span> -->
-        <!-- <a href="https://vipranarayan14.github.io">Other projects</a> -->
-      </div>
-      <div>ADX</div>
-    </footer>
+            <div class="input-group">
+                <label id="outputLabel">Unicode Output</label>
+                <textarea id="outputText" readonly placeholder="Result will appear here..."></textarea>
+                <button id="copyBtn" class="copy-btn">Copy</button>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="./index.js"></script>
-  </body>
+</body>
 </html>
